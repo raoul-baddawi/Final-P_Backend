@@ -5,9 +5,9 @@ const Profile = require("../models/profiles");
 
 // Configuration
 cloudinary.config({
-  cloud_name: "dobnxlrzg",
-  api_key: "989746451818535",
-  api_secret: "V0CDdMvcHtLd-xAanpxget6XdcE",
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.API_KEY,
+  api_secret: API_SECRET,
 });
 
 
