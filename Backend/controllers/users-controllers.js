@@ -42,7 +42,7 @@ const registerUser = asyncHandler(async (req, res) => {
   if (user) {
     res.status(201).json({
       _id: user.id,
-      username: user.name,
+      username: user.username,
       email: user.email,
       token: generateToken(user._id),
     });
@@ -84,15 +84,15 @@ const registerAdmin = asyncHandler(async (req, res) => {
     Profile.create({
       user_id: user._id,
       user_type: user_type,
-      name: " ",
+      name: " ", 
       position: " ",
       website_link: " ",
       description: " ",
-      facebook: " ",
-      instagram: " ",
+      facebook: " ", 
+      instagram: " ", 
       github: " ",
       linkedin: " ",
-      image: " ",
+      image: " ", 
     });
     Cv.create({
       user_id: user._id,
@@ -141,7 +141,7 @@ const loginUser = asyncHandler(async (req, res) => {
   if (user && (await bcrypt.compare(password, user.password))) {
     res.json({
       _id: user.id,
-      name: user.name,
+      username: user.username,
       email: user.email,
       role: user.role,
       token: generateToken(user._id),
@@ -151,6 +151,8 @@ const loginUser = asyncHandler(async (req, res) => {
     throw new Error("invalid email or password");
   }
 });
+
+
 
 // this function get the users
 // the route is GET/api/users

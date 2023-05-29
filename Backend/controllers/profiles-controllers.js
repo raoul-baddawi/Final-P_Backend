@@ -23,6 +23,14 @@ const getProfiles = asyncHandler(async (req, res) => {
 // this function get a specific Profile
 // the route is 
 const getProfile = asyncHandler(async (req, res) => {
+  const profile = await Profile.findOne({
+    user_id: req.params.id,
+  });
+
+  if (!profile) {
+    return res.status(200).json({ message: "No" });
+  }
+
   const {
     user_id,
     name,
@@ -34,9 +42,9 @@ const getProfile = asyncHandler(async (req, res) => {
     github,
     linkedin,
     image,
-  } = await Profile.findOne({
-    user_id: req.params.id,
-  });
+  } = profile;
+
+  
   res.status(200).json({
     id: user_id,
     name: name,

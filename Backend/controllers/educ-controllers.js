@@ -91,11 +91,11 @@ const deleteEducation = asyncHandler(async (req, res) => {
 
   await education.remove();
   res.status(200).json({ id: req.params.id });
-});
+}); 
 
-module.exports = {
+module.exports = { 
   createEducation,
-  // getEducation,
+  // getEducation, 
   getEducations,
   updateEducation,
   deleteEducation,

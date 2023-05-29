@@ -2,6 +2,7 @@ const colors = require("colors");
 const dotenv = require("dotenv").config();
 const multer = require("multer");
 const { errorHandler } = require("./middleware/errormidware");
+const contactusRoutes = require("./routes/contact");
 const express = require("express");
 const helmet = require("helmet");
 const morgan = require("morgan");
@@ -45,10 +46,14 @@ app.use("/api/messages", require("./routes/messages"));
 // Cv routes
 // Education routes
 // Experience routes
+// Projects routes
 app.use("/profile", require("./routes/userProfile"));
+app.use("/project", require("./routes/projects"));
 app.use("/cv", require("./routes/userCv"));
 app.use("/education", require("./routes/educations"));
 app.use("/experience", require("./routes/experiences"));
+app.use("/contactus", contactusRoutes);
+
 app.use(errorHandler);
 
 
