@@ -53,9 +53,9 @@ const registerUser = asyncHandler(async (req, res) => {
 });
 
 const registerAdmin = asyncHandler(async (req, res) => {
-  const { username, email, password, user_type } = req.body;
+  const { username, email, password, position, user_type } = req.body;
 
-  if (!username || !email || !password) {
+  if (!username || !email || !password || user_type || position) {
     res.status(400);
     throw new Error("Please fill all fields");
   }
@@ -77,13 +77,13 @@ const registerAdmin = asyncHandler(async (req, res) => {
     username,
     email,
     password: hashedPassword,
-    role: "admin",
+    role: user_type,
   });
 
   if (user) {
     Profile.create({
       user_id: user._id,
-      user_type: user_type,
+      user_type: position,
       name: " ", 
       position: " ",
       website_link: " ",
@@ -250,6 +250,30 @@ const getNo = asyncHandler(async (req, res) => {
   }
 });
 
+
+
+const updateUserRole = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const { role } = req.body;
+
+  try {
+    const user = await User.findById(id);
+
+    if (!user) {
+      res.status(404).json({ error: "User not found" });
+      return;
+    }
+
+    user.role = role;
+    await user.save();
+
+    res.status(200).json({ message: "User role updated successfully" });
+  } catch (error) {
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+
 module.exports = {
   registerUser,
   loginUser,
@@ -259,5 +283,6 @@ module.exports = {
   deleteAllUsers,
   registerAdmin,
   deleteAdmin,
-  getNo
+  getNo,
+  updateUserRole
 };

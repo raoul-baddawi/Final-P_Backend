@@ -10,6 +10,7 @@ const {
   registerAdmin,
   deleteAdmin,
   getNo,
+  updateUserRole,
 } = require("../controllers/users-controllers");
 const { protect } = require("../middleware/authMiddleware");
 
@@ -23,5 +24,6 @@ router.delete("/delete/all", protect, deleteAllUsers);
 router.post("/admin", registerAdmin);
 router.delete("/admin/:id", protect, deleteAdmin);
 router.delete("/delete/:id", protect, deleteUser);
+router.patch("/user/:id", updateUserRole);
 
 module.exports = router;
