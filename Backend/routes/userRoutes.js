@@ -22,8 +22,8 @@ router.get("/users", getNo);
 router.get("/users/:id", getUser);
 router.delete("/delete/all", protect, deleteAllUsers);
 router.post("/admin", registerAdmin);
-router.delete("/admin/:id", protect, deleteAdmin);
-router.delete("/delete/:id", protect, deleteUser);
+router.delete("/admin/:id", deleteAdmin);
+router.delete("/delete/:id", deleteUser);
 router.patch("/user/:id", updateUserRole);
 
 module.exports = router;
