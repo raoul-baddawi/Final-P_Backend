@@ -53,9 +53,10 @@ const registerUser = asyncHandler(async (req, res) => {
 });
 
 const registerAdmin = asyncHandler(async (req, res) => {
-  const { username, email, password, user_type, position } = req.body;
+  const { username, email, password, role, position, user_type } = req.body;
 
-  if (!username || !email || !password || !user_type) {
+  console.log(req.body)
+  if (!username || !email || !password || !role || !user_type || !position) {
     res.status(400);
     throw new Error("Please fill all fields");
   }
@@ -77,15 +78,15 @@ const registerAdmin = asyncHandler(async (req, res) => {
     username,
     email,
     password: hashedPassword,
-    role: user_type,
+    role: role,
   });
 
-  if (user && user_type === "admin") {
+  if (user && role === "admin") {
     Profile.create({
       user_id: user._id,
-      user_type: position,
+      user_type: user_type,
       name: username, 
-      position: " ",
+      position: position,
       website_link: " ",
       description: " ",
       facebook: " ", 
@@ -97,7 +98,7 @@ const registerAdmin = asyncHandler(async (req, res) => {
     Cv.create({
       user_id: user._id,
       name: username,
-      position: " ",
+      position: position,
       email: " ",
       phone: " ",
       age: " ",

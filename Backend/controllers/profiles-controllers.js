@@ -41,6 +41,7 @@ const getProfile = asyncHandler(async (req, res) => {
     instagram,
     github,
     linkedin,
+    user_type,
     image,
   } = profile;
 
@@ -56,6 +57,7 @@ const getProfile = asyncHandler(async (req, res) => {
     github: github,
     linkedin: linkedin,
     image: image,
+    user_type: user_type,
   });
 });
 

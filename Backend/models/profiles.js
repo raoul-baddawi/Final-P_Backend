@@ -10,7 +10,7 @@ const Profile = mongoose.Schema(
     user_type: {
       type: String,
       enum: ['dev', 'mentor'],
-      default: 'mentor',
+      default: 'dev',
     },
     name: {
       type: String,
