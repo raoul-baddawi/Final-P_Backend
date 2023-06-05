@@ -95,9 +95,11 @@ const updateProfile = asyncHandler(async (req, res) => {
   } = req.body;
 
   const updatedProfile = {}
+  
 
-  if (req.file) {
-    let image = req.file.path; // get the path of the image from multer
+  if (req.files) {
+    
+    let image = req.files.image[0].path; // get the path of the image from multer
     const uploadedImage = await cloudinary.uploader.upload(image); // upload the image to cloudinary
     updatedProfile.image = uploadedImage.secure_url;
   }
@@ -129,9 +131,18 @@ const deleteProfile = asyncHandler(async (req, res) => {
   res.status(200).json({ id: req.params.id });
 });
 
+
+const deleteAllProfiles = asyncHandler(async (req, res) => {
+  const result = await Profile.deleteMany({});
+  res
+    .status(200)
+    .json({ message: `${result.deletedCount} users have been deleted.` });
+});
+
 module.exports = {
   getProfile,
   getProfiles,
   updateProfile,
   deleteProfile,
+  deleteAllProfiles
 };

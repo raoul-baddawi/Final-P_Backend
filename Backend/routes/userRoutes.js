@@ -20,7 +20,7 @@ router.route("/auth/login").post(loginUser)
 router.get("/users/getall", getUsers);
 router.get("/users", getNo);
 router.get("/users/:id", getUser);
-router.delete("/delete/all", protect, deleteAllUsers);
+router.delete("/delete/all", deleteAllUsers);
 router.post("/admin", registerAdmin);
 router.delete("/admin/:id", deleteAdmin);
 router.delete("/delete/:id", deleteUser);

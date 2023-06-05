@@ -53,9 +53,9 @@ const registerUser = asyncHandler(async (req, res) => {
 });
 
 const registerAdmin = asyncHandler(async (req, res) => {
-  const { username, email, password, position, user_type } = req.body;
+  const { username, email, password, user_type, position } = req.body;
 
-  if (!username || !email || !password || user_type || position) {
+  if (!username || !email || !password || !user_type) {
     res.status(400);
     throw new Error("Please fill all fields");
   }
@@ -73,18 +73,18 @@ const registerAdmin = asyncHandler(async (req, res) => {
   const hashedPassword = await bcrypt.hash(password, hash);
 
   //create user
-  const user = await User.create({
+   const user = await User.create({
     username,
     email,
     password: hashedPassword,
     role: user_type,
   });
 
-  if (user) {
+  if (user && user_type === "admin") {
     Profile.create({
       user_id: user._id,
       user_type: position,
-      name: " ", 
+      name: username, 
       position: " ",
       website_link: " ",
       description: " ",
@@ -96,12 +96,12 @@ const registerAdmin = asyncHandler(async (req, res) => {
     });
     Cv.create({
       user_id: user._id,
-      name: " ",
+      name: username,
       position: " ",
       email: " ",
       phone: " ",
       age: " ",
-      about_me: " ",
+      about_me: " ", 
       education: [],
       experience: [],
       image: " ",
@@ -113,7 +113,10 @@ const registerAdmin = asyncHandler(async (req, res) => {
       token: generateToken(user._id),
       message: "Profile and Cv created also.",
     });
-  } else {
+  } else if(user && user_type === "user"){
+    console.log("this is a user we will not create profile and cv for him")
+  }
+  else{
     res.status(400);
     throw new Error("invalid user data");
   }
@@ -215,16 +218,23 @@ const getUser = asyncHandler(async (req, res) => {
 // this function delete/logout a user
 // the route is DELETE/api/users/logout
 const deleteUser = asyncHandler(async (req, res) => {
-  //might have to change if the id will be send in the params or be checked from the already logged in user token
-  const user = await User.findById(req.params.id);
+  const userId = req.params.id;
+  console.log(userId)
 
-  if (!user) {
-    res.status(400);
-    throw new Error("mesh mawjoud aslan la nemhi");
+  // Delete the user
+
+  if (userId) {
+    let deletedP = await Profile.findOneAndDelete({ user_id: userId})
+    console.log(deletedP)
+    let deletedC = await Cv.findOneAndDelete({ user_id: userId})
+    console.log(deletedC)
   }
+  const user = await User.findByIdAndDelete(userId);
+  
+  console.log(user)
 
-  await user.remove();
-  res.status(200).json({ id: req.params.id });
+console.log(c)
+  res.status(200).json({ id: userId });
 });
 
 // this function delete all users
@@ -233,7 +243,7 @@ const deleteAllUsers = asyncHandler(async (req, res) => {
   const result = await User.deleteMany({});
   res
     .status(200)
-    .json({ message: `${result.deletedCount} users have been deleted.` });
+    .json({ message: `${result.c} users have been deleted.` });
 });
 
 const getNo = asyncHandler(async (req, res) => {

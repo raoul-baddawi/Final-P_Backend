@@ -12,15 +12,15 @@ const getcontactus = async (req, res) => {
 };
 
 const postcontactus = async (req, res) => {
-  if (!req.body.fullName || !req.body.Message || !req.body.mail) {
+  if (!req.body.fullName || !req.body.Message || !req.body.email) {
     res.status(400).json({ message: "Error" });
   } else {
     const contactpost = await Contactus.create({
       fullName: req.body.fullName,
-      email: req.body.mail,
+      email: req.body.email,
       Message: req.body.Message,
     });
-    return res.status(200).json(contactpost);
+    res.status(200).json(contactpost);
   }
 };
 

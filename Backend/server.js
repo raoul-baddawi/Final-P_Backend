@@ -26,7 +26,6 @@ connectDB();
 app.use(
   cors({
     origin: "*",
-    credentials: true,   //might cause problems
     optionSuccessStatus: 200,
   })
 );

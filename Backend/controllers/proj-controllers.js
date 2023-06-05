@@ -3,6 +3,7 @@ const cloudinary = require("cloudinary").v2;
 const Project = require("../models/projects");
 
 const createProject = asyncHandler(async (req, res) => {
+  console.log("we are in create")
   const {
     title,
     subtitle,
@@ -20,10 +21,12 @@ const createProject = asyncHandler(async (req, res) => {
   }
   try {
     let imageUrl;
-    if (req.file) {
-      let image = req.file.path; // get the path of the image from multer
+    // console.log(req.files)
+    if (req.files) {
+      let image = req.files.image[0].path; // get the path of the image from multer
       const uploadedImage = await cloudinary.uploader.upload(image); // upload the image to cloudinary
       imageUrl = uploadedImage.secure_url;
+      console.log(imageUrl)
     }
     const project = await Project.create({
       title,
@@ -36,11 +39,14 @@ const createProject = asyncHandler(async (req, res) => {
       website_link,
       image: imageUrl,
     });
-    res.status(201).json(project);
+    res.status(201).send(project);
   } catch (error) {
     res.status(500).json({ error: "Failed to create project" });
   }
 });
+
+
+
 
 const getProject = asyncHandler(async (req, res) => {
   try {
@@ -59,45 +65,37 @@ const updateProject = asyncHandler(async (req, res) => {
   const {
     title,
     subtitle,
-    technologies,
-    desc,
-    repository,
-    email,
-    password, 
     website_link,
+    desc,
+    technologies,
+    email,
+    password,
+    repository
   } = req.body;
-  const project = await Project.findById(req.params.id);
-  if (!project) {
-    res.status(404).send("Project not found");
-  }
-  try {
-    if (project) {
-      let imageUrl = project.image;
-      if (req.file) {
-        let image = req.file.path; // get the path of the image from multer
-        const uploadedImage = await cloudinary.uploader.upload(image); // upload the image to cloudinary
-        imageUrl = uploadedImage.secure_url;
-      }
-      project.title = title;
-      project.subtitle = subtitle;
-      project.technologies = technologies;
-      project.desc = desc;
-      project.repository = repository;
-      project.email = email;
-      project.password = password;
-      project.website_link = website_link;
-      project.image = imageUrl;
+  console.log("body is ",req.body)
+  console.log("image is ", req.files)
 
-      let response = await project.save();
-      if (response) {
-        res.status(201).send(response);
-      } else {
-        res.status(404).send("something went wrong in the controller");
-      }
-    }
-  } catch (error) {
-    res.status(500).send(error);
+  const updatedProject = {}
+  
+
+  if (req.files) {
+    
+    let image = req.files.image[0].path; // get the path of the image from multer
+    const uploadedImage = await cloudinary.uploader.upload(image); // upload the image to cloudinary
+    updatedProject.image = uploadedImage.secure_url;
   }
+  
+  if (title) {updatedProject.title = title}
+  if (subtitle) {updatedProject.subtitle = subtitle}
+  if (website_link) {updatedProject.website_link = website_link}
+  if (desc) {updatedProject.desc = desc}
+  if (technologies) {updatedProject.technologies = technologies}
+  if (email) {updatedProject.email = email}
+  if (password) {updatedProject.password = password}
+  if (repository) {updatedProject.repository = repository}
+  console.log("Updatedddd",updatedProject)
+  const updated = await Project.findByIdAndUpdate(req.params.id, updatedProject);
+  res.status(200).json(updated)
 });
 
 const deleteProject = asyncHandler(async (req, res) => {

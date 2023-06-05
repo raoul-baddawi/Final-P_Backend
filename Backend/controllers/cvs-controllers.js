@@ -52,8 +52,9 @@ const updateCv = asyncHandler(async (req, res) => {
 
   const updatedCv = {};
 
-  if (req.file) {
-    let image = req.file.path; // get the path of the image from multer
+  if (req.files) {
+    
+    let image = req.files.image[0].path; // get the path of the image from multer
     const uploadedImage = await cloudinary.uploader.upload(image); // upload the image to cloudinary
     updatedCv.image = uploadedImage.secure_url;
   }
@@ -106,9 +107,18 @@ const deleteCv = asyncHandler(async (req, res) => {
   res.status(200).json({ id: req.params.id });
 });
 
+
+const deleteAllCvs = asyncHandler(async (req, res) => {
+  const result = await Cv.deleteMany({});
+  res 
+    .status(200)
+    .json({ message: `${result.deletedCount} Cvs have been deleted.` });
+});
+
 module.exports = {
   getCv,
   getCvs,
   updateCv,
   deleteCv,
+  deleteAllCvs
 };
