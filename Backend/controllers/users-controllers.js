@@ -264,6 +264,7 @@ const getNo = asyncHandler(async (req, res) => {
 
 
 const updateUserRole = asyncHandler(async (req, res) => {
+  console.log("role updating ...")
   const { id } = req.params;
   const { role } = req.body;
 
@@ -278,10 +279,41 @@ const updateUserRole = asyncHandler(async (req, res) => {
     user.role = role;
     await user.save();
 
+
+    if (role === "admin") {
+      Profile.create({
+        user_id: user._id,
+        user_type: user.user_type,
+        name: user.username,
+        position: " ",
+        website_link: " ",
+        description: " ",
+        facebook: " ",
+        instagram: " ",
+        github: " ",
+        linkedin: " ",
+        image: " ",
+      });
+      Cv.create({
+        user_id: user._id,
+        name: user.username,
+        position: " ",
+        email: " ",
+        phone: " ",
+        age: " ",
+        about_me: " ",
+        education: [],
+        experience: [],
+        image: " ",
+      });
+    }
+
     res.status(200).json({ message: "User role updated successfully" });
   } catch (error) {
     res.status(500).json({ error: "Internal server error" });
   }
+
+  console.log("role updated")
 });
 
 
