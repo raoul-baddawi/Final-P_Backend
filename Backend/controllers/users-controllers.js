@@ -123,6 +123,32 @@ const registerAdmin = asyncHandler(async (req, res) => {
   }
 });
 
+const updatePassword = asyncHandler(async (req, res) => {
+  console.log("updating pass")
+  const { id } = req.params;
+  const { password } = req.body;
+
+  try {
+    const user = await User.findById(id);
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Hash the new password
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+    user.password = hashedPassword;
+    await user.save();
+
+    return res.json({ message: 'Password updated successfully' });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: 'Server error' });
+  }
+});
+
 const deleteAdmin = asyncHandler(async (req, res) => {
   const user = await User.findById(req.params.id);
 
@@ -327,5 +353,6 @@ module.exports = {
   registerAdmin,
   deleteAdmin,
   getNo,
-  updateUserRole
+  updateUserRole,
+  updatePassword
 };
